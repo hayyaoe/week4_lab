@@ -24,48 +24,48 @@ class dummy_data {
 
     fun get_data_tokopedia_category(): List<categories> {
         return listOf(
-//            categories(image_path = R.drawable.car, category_name = "Cars", number_of_items = 100),
-//            categories(image_path = R.drawable.gadget, category_name = "Gadgets", number_of_items = 50),
-//            categories(image_path = R.drawable.electronics, category_name = "Electronics", number_of_items = 75),
-//            categories(image_path = R.drawable.clothing, category_name = "Clothing", number_of_items = 200),
-//            categories(image_path = R.drawable.furniture, category_name = "Furniture", number_of_items = 120),
-//            categories(image_path = R.drawable.books, category_name = "Books", number_of_items = 300),
-//            categories(image_path = R.drawable.sports, category_name = "Sports", number_of_items = 80),
-//            categories(image_path = R.drawable.beauty, category_name = "Beauty", number_of_items = 150),
+            categories(image_path = R.drawable.car, category_name = "Cars", number_of_items = 100),
+            categories(image_path = R.drawable.gadget, category_name = "Gadgets", number_of_items = 50),
+            categories(image_path = R.drawable.electronics, category_name = "Electronics", number_of_items = 75),
+            categories(image_path = R.drawable.clothing, category_name = "Clothing", number_of_items = 200),
+            categories(image_path = R.drawable.furniture, category_name = "Furniture", number_of_items = 120),
+            categories(image_path = R.drawable.books, category_name = "Books", number_of_items = 300),
+            categories(image_path = R.drawable.sports, category_name = "Sports", number_of_items = 80),
+            categories(image_path = R.drawable.beauty, category_name = "Beauty", number_of_items = 150),
         )
     }
 
     fun get_data_tokopedia_product(): List<products> {
         return listOf(
-//            products(
-//                image_path = R.drawable.phone,
-//                product_name = "Samsung S23",
-//                price = 699000,
-//                location = "New York",
-//                sold = 50
-//            ),
-//
-//            products(
-//                image_path = R.drawable.laptop,
-//                product_name = "Laptop ABC",
-//                price = 129009,
-//                location = "Los Angeles",
-//                sold = 30
-//            ),
-//            products(
-//                image_path = R.drawable.smartwatch,
-//                product_name = "Smartwatch QRS",
-//                price = 19009,
-//                location = "San Francisco",
-//                sold = 20
-//            ),
-//            products(
-//                image_path = R.drawable.camera,
-//                product_name = "Canon EOS 718D",
-//                price = 5990000,
-//                location = "Chicago",
-//                sold = 10
-//            )
+            products(
+                image_path = R.drawable.car,
+                product_name = "Datsun - Hakotora",
+                price = 699000,
+                location = "New York",
+                sold = 50
+            ),
+
+            products(
+                image_path = R.drawable.electronics,
+                product_name = "PCCOOLER - i100",
+                price = 129009,
+                location = "Los Angeles",
+                sold = 30
+            ),
+            products(
+                image_path = R.drawable.gadget,
+                product_name = "Asus Zenfone 10",
+                price = 19009,
+                location = "San Francisco",
+                sold = 20
+            ),
+            products(
+                image_path = R.drawable.books,
+                product_name = "Kafka on the Shore",
+                price = 5990000,
+                location = "Chicago",
+                sold = 10
+            )
         )
     }
 
