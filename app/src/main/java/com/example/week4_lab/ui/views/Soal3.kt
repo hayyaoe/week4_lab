@@ -67,8 +67,12 @@ import com.example.week4_lab.model.Suggestion
 import java.util.concurrent.CountDownLatch
 import kotlin.random.Random
 
+
 @Composable
-fun Soal3(listStory: List<Story>, listFeed : List<Feed>, listSuggestion: List<Suggestion>) {
+fun Soal3(listStory: List<Story>, listFeed: List<Feed>, listSuggestion: List<Suggestion>) {
+
+    var suggestionHit by rememberSaveable { mutableStateOf(0) }
+
     Box {
         Column(
             modifier = Modifier
@@ -79,24 +83,26 @@ fun Soal3(listStory: List<Story>, listFeed : List<Feed>, listSuggestion: List<Su
 
             LazyColumn(
                 modifier = Modifier
-            ){
+            ) {
 
                 item {
                     Header()
                     LazyStory(listStory = DataSource().loadStory())
                 }
-            items(listFeed){
+                items(listFeed) {
                     FeedPost(
-                        feed = it
+                        feed = it,
+                        suggestionHit = suggestionHit
                     )
-            }
+                    suggestionHit++
+                }
 
             }
         }
         Box(
             contentAlignment = Alignment.BottomCenter,
             modifier = Modifier.fillMaxHeight()
-        ){
+        ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -106,51 +112,20 @@ fun Soal3(listStory: List<Story>, listFeed : List<Feed>, listSuggestion: List<Su
                 verticalAlignment = Alignment.CenterVertically
             )
             {
-                Image(
-                    painter = painterResource(id = R.drawable.home),
-                    contentDescription = "Border",
-                    modifier = Modifier
-                        .size(30.dp),
-                    contentScale = ContentScale.Crop
-                )
-
-                Image(
-                    painter = painterResource(id = R.drawable.search),
-                    contentDescription = "Border",
-                    modifier = Modifier
-                        .size(30.dp),
-                    contentScale = ContentScale.Crop
-                )
-
-                Image(
-                    painter = painterResource(id = R.drawable.post),
-                    contentDescription = "Border",
-                    modifier = Modifier
-                        .size(30.dp),
-                    contentScale = ContentScale.Crop
-                )
-                Image(
-                    painter = painterResource(id = R.drawable.reels),
-                    contentDescription = "Border",
-                    modifier = Modifier
-                        .size(30.dp),
-                    contentScale = ContentScale.Crop
-                )
-                Image(
-                    painter = painterResource(id = R.drawable.account),
-                    contentDescription = "Border",
-                    modifier = Modifier
-                        .size(30.dp),
-                    contentScale = ContentScale.Crop
-                )
+                HomeButtons(message = "Ini Home", drawable = R.drawable.home)
+                HomeButtons(message = "Ini Search", drawable = R.drawable.search)
+                HomeButtons(message = "Ini Post", drawable = R.drawable.post)
+                HomeButtons(message = "Ini Reels", drawable = R.drawable.reels)
+                HomeButtons(message = "Ini Account", drawable = R.drawable.account)
             }
         }
 
     }
 
 }
+
 @Composable
-fun Header(){
+fun Header() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -174,14 +149,15 @@ fun Header(){
 
             Image(
                 painter = painterResource(id = R.drawable.dm),
-                contentDescription = "Like"
+                contentDescription = "dm"
             )
         }
     }
 
 }
+
 @Composable
-fun LazyStory(listStory: List<Story>){
+fun LazyStory(listStory: List<Story>) {
     LazyRow(
         modifier = Modifier.padding(bottom = 4.dp)
     ) {
@@ -194,7 +170,7 @@ fun LazyStory(listStory: List<Story>){
 }
 
 @Composable
-fun LazySuggest(listSuggestion : List<Suggestion>){
+fun LazySuggest(listSuggestion: List<Suggestion>) {
     LazyRow(
         modifier = Modifier.padding(vertical = 4.dp)
     ) {
@@ -207,13 +183,29 @@ fun LazySuggest(listSuggestion : List<Suggestion>){
 }
 
 @Composable
-fun FeedPost(feed: Feed) {
+fun HomeButtons(message: String, drawable: Int) {
+
+
+    val context = LocalContext.current
+    IconButton(onClick = {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }) {
+        Icon(
+            painter = painterResource(id = drawable),
+            contentDescription = "Like",
+            tint = Color.White,
+            modifier = Modifier.size(30.dp)
+        )
+    }
+}
+
+@Composable
+fun FeedPost(feed: Feed, suggestionHit: Int) {
 
     var isLiked by rememberSaveable { mutableStateOf(feed.isLiked) }
     var isSaved by rememberSaveable { mutableStateOf(feed.isBookmarked) }
     var isExpanded by rememberSaveable { mutableStateOf(false) }
 
-    val random = Random.nextInt(2)
     val resourceId = getResourceId(fileName = feed.profilePic)
     Column(
         modifier = Modifier.background(Color.Black)
@@ -284,7 +276,7 @@ fun FeedPost(feed: Feed) {
                 val context = LocalContext.current
                 IconButton(onClick = {
                     isLiked = !isLiked
-                    if(!isLiked){
+                    if (!isLiked) {
                         Toast.makeText(context, "Post Liked", Toast.LENGTH_SHORT).show()
                     } else {
                         Toast.makeText(context, "Post Unliked", Toast.LENGTH_SHORT).show()
@@ -309,7 +301,7 @@ fun FeedPost(feed: Feed) {
                 }
 
                 IconButton(onClick = {
-                        Toast.makeText(context, "Commented", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Commented", Toast.LENGTH_SHORT).show()
                 }) {
                     Icon(
                         painter = painterResource(id = R.drawable.comment),
@@ -336,7 +328,7 @@ fun FeedPost(feed: Feed) {
 
             IconButton(onClick = {
                 isSaved = !isSaved
-                if(!isLiked){
+                if (!isLiked) {
                     Toast.makeText(context, "Post Saved", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(context, "Removed from Save", Toast.LENGTH_SHORT).show()
@@ -361,7 +353,7 @@ fun FeedPost(feed: Feed) {
             }
         }
 
-        when(feed.likes){
+        when (feed.likes) {
             0 -> {}
             1 -> {
                 Text(
@@ -372,7 +364,8 @@ fun FeedPost(feed: Feed) {
                         .offset(y = (-10).dp)
                 )
             }
-            else ->{
+
+            else -> {
                 Text(
                     text = "${feed.likes} Likes",
                     color = Color.White,
@@ -392,8 +385,12 @@ fun FeedPost(feed: Feed) {
         {
             if (!isExpanded) {
                 TextDifferentFontWeights(username = feed.username, caption = feed.captions)
-            }else{
-                TextDifferentFontWeights(username = feed.username, caption = feed.captions, maxLine = 5000)
+            } else {
+                TextDifferentFontWeights(
+                    username = feed.username,
+                    caption = feed.captions,
+                    maxLine = 5000
+                )
             }
         }
 
@@ -406,7 +403,7 @@ fun FeedPost(feed: Feed) {
                 .padding(horizontal = 12.dp)
         )
     }
-    if(random == 0) {
+    if (suggestionHit%2 ==0) {
         LazySuggest(listSuggestion = DataSource().loadSuggestion())
     }
 }
@@ -482,34 +479,34 @@ fun StoryUser(profile: Story, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun FollowCard(suggestion:Suggestion){
+fun FollowCard(suggestion: Suggestion) {
 
     var isFollowed by rememberSaveable { mutableStateOf(false) }
-    OutlinedCard (
+    OutlinedCard(
         modifier = Modifier.padding(8.dp),
         colors = CardDefaults.cardColors(Color.Black)
-    ){
+    ) {
         val resourceId = getResourceId(fileName = suggestion.profilePic)
-        Box{
+        Box {
 
-            Image(painter = painterResource(id = R.drawable.round_close_24),
+            Image(
+                painter = painterResource(id = R.drawable.round_close_24),
                 contentDescription = "Close",
                 modifier = Modifier.padding(4.dp)
             )
-            Column (
+            Column(
                 modifier = Modifier
                     .padding(16.dp)
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
-            ){
+            ) {
                 Image(
                     painter = painterResource(id = resourceId),
                     contentDescription = "profile",
                     Modifier
                         .clip(shape = CircleShape)
                         .height(100.dp)
-                        .width(100.dp)
-                    ,
+                        .width(100.dp),
                     contentScale = ContentScale.Crop
                 )
 
@@ -525,15 +522,15 @@ fun FollowCard(suggestion:Suggestion){
                 Button(
                     onClick = {
                         isFollowed = !isFollowed
-                        if(!isFollowed){
+                        if (!isFollowed) {
                             Toast.makeText(context, "Followed", Toast.LENGTH_SHORT).show()
                         } else {
                             Toast.makeText(context, "Unfollowed", Toast.LENGTH_SHORT).show()
                         }
                     },
-                    colors =if (!isFollowed){
+                    colors = if (!isFollowed) {
                         ButtonDefaults.buttonColors(containerColor = Color.Magenta)
-                    }else{
+                    } else {
                         ButtonDefaults.buttonColors(containerColor = Color.LightGray)
                     }
 
@@ -541,7 +538,7 @@ fun FollowCard(suggestion:Suggestion){
                 ) {
                     if (!isFollowed) {
                         Text(text = "follow")
-                    }else{
+                    } else {
                         Text(text = "followed")
                     }
                 }
@@ -551,7 +548,7 @@ fun FollowCard(suggestion:Suggestion){
 }
 
 @Composable
-fun TextDifferentFontWeights(username :String, caption: String, maxLine : Int = 2) {
+fun TextDifferentFontWeights(username: String, caption: String, maxLine: Int = 2) {
     val text = buildAnnotatedString {
         withStyle(style = SpanStyle(fontWeight = Bold, fontSize = 14.sp)) {
             append(username)
@@ -565,7 +562,7 @@ fun TextDifferentFontWeights(username :String, caption: String, maxLine : Int = 
         text = text,
         textAlign = TextAlign.Start,
         fontSize = 20.sp,
-        maxLines =  maxLine,
+        maxLines = maxLine,
         color = Color.White,
         overflow = TextOverflow.Ellipsis,
     )
@@ -574,7 +571,11 @@ fun TextDifferentFontWeights(username :String, caption: String, maxLine : Int = 
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun Soal3Preview() {
-    Soal3(listStory = DataSource().loadStory(), listFeed = DataSource().loadFeed(), listSuggestion = DataSource().loadSuggestion())
+    Soal3(
+        listStory = DataSource().loadStory(),
+        listFeed = DataSource().loadFeed(),
+        listSuggestion = DataSource().loadSuggestion()
+    )
 //    StoryUser()
 //    FeedPost(DataSource().loadFeed()[1])
 //    FollowCard(DataSource().loadSuggestion()[0])
