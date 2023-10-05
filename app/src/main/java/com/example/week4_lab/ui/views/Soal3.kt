@@ -2,7 +2,6 @@ package com.example.week4_lab.ui.views
 
 import android.annotation.SuppressLint
 import android.widget.Toast
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -21,12 +20,9 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedCard
@@ -43,12 +39,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.font.FontWeight.Companion.Normal
 import androidx.compose.ui.text.font.FontWeight.Companion.SemiBold
@@ -57,21 +51,17 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
 import com.example.week4_lab.R
 import com.example.week4_lab.data.DataSource
 import com.example.week4_lab.model.Feed
 import com.example.week4_lab.model.Story
 import com.example.week4_lab.model.Suggestion
-import java.util.concurrent.CountDownLatch
 import kotlin.random.Random
 
 
 @Composable
-fun Soal3(listStory: List<Story>, listFeed: List<Feed>, listSuggestion: List<Suggestion>) {
-
-    var suggestionHit by rememberSaveable { mutableStateOf(0) }
+fun Soal3(listFeed: List<Feed>) {
 
     Box {
         Column(
@@ -92,9 +82,7 @@ fun Soal3(listStory: List<Story>, listFeed: List<Feed>, listSuggestion: List<Sug
                 items(listFeed) {
                     FeedPost(
                         feed = it,
-                        suggestionHit = suggestionHit
                     )
-                    suggestionHit++
                 }
 
             }
@@ -200,12 +188,13 @@ fun HomeButtons(message: String, drawable: Int) {
 }
 
 @Composable
-fun FeedPost(feed: Feed, suggestionHit: Int) {
+fun FeedPost(feed: Feed) {
 
     var isLiked by rememberSaveable { mutableStateOf(feed.isLiked) }
     var isSaved by rememberSaveable { mutableStateOf(feed.isBookmarked) }
     var isExpanded by rememberSaveable { mutableStateOf(false) }
 
+    val random = Random.nextInt(2)
     val resourceId = getResourceId(fileName = feed.profilePic)
     Column(
         modifier = Modifier.background(Color.Black)
@@ -403,7 +392,7 @@ fun FeedPost(feed: Feed, suggestionHit: Int) {
                 .padding(horizontal = 12.dp)
         )
     }
-    if (suggestionHit%2 ==0) {
+    if (random==0) {
         LazySuggest(listSuggestion = DataSource().loadSuggestion())
     }
 }
@@ -572,9 +561,7 @@ fun TextDifferentFontWeights(username: String, caption: String, maxLine: Int = 2
 @Composable
 fun Soal3Preview() {
     Soal3(
-        listStory = DataSource().loadStory(),
-        listFeed = DataSource().loadFeed(),
-        listSuggestion = DataSource().loadSuggestion()
+        listFeed = DataSource().loadFeed()
     )
 //    StoryUser()
 //    FeedPost(DataSource().loadFeed()[1])
