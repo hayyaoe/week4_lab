@@ -167,7 +167,6 @@ fun GridCard(content: String) {
     )
 }
 
-
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun Soal4Preview() {
