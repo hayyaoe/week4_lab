@@ -1,9 +1,9 @@
-package dev.kchr.week4_kevin_1.data
+package com.example.week4_lab.data
 
-import dev.kchr.week4_kevin_1.domain.model.Explore
-import dev.kchr.week4_kevin_1.domain.model.Feed
-import dev.kchr.week4_kevin_1.domain.model.Story
-import dev.kchr.week4_kevin_1.domain.model.Suggestion
+import com.example.week4_lab.model.Explore
+import com.example.week4_lab.model.Feed
+import com.example.week4_lab.model.Story
+import com.example.week4_lab.model.Suggestion
 
 class DataSource {
     public fun loadFeed(): List<Feed>{
