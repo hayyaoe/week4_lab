@@ -4,23 +4,19 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CardElevation
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,12 +35,13 @@ import com.example.week4_lab.R
 import com.example.week4_lab.data.dummy_data
 import com.example.week4_lab.model.categories
 import com.example.week4_lab.model.products
-import java.util.Locale.Category
 
 @Composable
 fun Soal2(listCategory : List<categories>, listProduct : List<products>){
 
-    Column {
+    Column (
+        modifier = Modifier.background(color = Color(0xF8F8F8F8))
+    ) {
         Row(
             modifier = Modifier
                 .background(
@@ -73,18 +70,22 @@ fun Soal2(listCategory : List<categories>, listProduct : List<products>){
             Image(painter = painterResource(id = R.drawable.tokopakedi),
                 contentDescription ="Tokopakedi Banner",
                 modifier = Modifier
-                    .padding(8.dp)
+                    .padding(12.dp)
                     .height(160.dp)
-                    .fillMaxWidth(),
-                contentScale = ContentScale.FillWidth
+                    .fillMaxWidth()
+                    .clip(shape = RoundedCornerShape(8)),
+                contentScale = ContentScale.Crop
             )
             Text(
                 text = "Categories",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold,
+                color = Color.Black,
                 modifier = Modifier.padding(vertical = 8.dp ,horizontal= 16.dp)
             )
-            LazyRow{
+            LazyRow(
+                contentPadding = PaddingValues(end = 16.dp)
+            ){
                 items(listCategory){
                     CardCategory(
                         category = it,
@@ -96,10 +97,13 @@ fun Soal2(listCategory : List<categories>, listProduct : List<products>){
                 text = "Products",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold,
+                color = Color.Black,
                 modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
             )
             LazyVerticalGrid(
-                columns = GridCells.Fixed(2)
+                columns = GridCells.Fixed(2),
+                modifier = Modifier.padding(horizontal = 12.dp),
+                contentPadding = PaddingValues(bottom = 6.dp)
             ){
                 items(listProduct){
                     CardProduct(it, Modifier.padding(4.dp))
@@ -121,17 +125,20 @@ fun CardCategory(category : categories, modifier: Modifier = Modifier){
         ){
             Image(painter = painterResource(id = category.image_path) ,
                 contentDescription = "Category",
-                modifier = Modifier.size(120.dp)
+                modifier = Modifier.size(120.dp),
+                contentScale = ContentScale.Crop
             )
             Text(
                 text = category.category_name,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
+                color = Color.Black,
                 modifier = Modifier.padding(top = 4.dp)
             )
             Text(
                 text = "${category.number_of_items} Products",
                 fontSize = 12.sp,
+                color = Color.Black,
                 modifier = Modifier.padding(top = 2.dp, bottom = 4.dp)
             )
         }
@@ -151,7 +158,8 @@ fun CardProduct(product: products, modifier: Modifier = Modifier){
         ){
             Image(painter = painterResource(id =product.image_path) ,
                 contentDescription = "Category",
-                modifier = Modifier.size(190.dp)
+                modifier = Modifier.size(190.dp),
+                contentScale = ContentScale.Crop
             )
             Text(
                 text = product.product_name,
@@ -159,23 +167,28 @@ fun CardProduct(product: products, modifier: Modifier = Modifier){
                 fontWeight = FontWeight.Bold,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
+                color = Color.Black,
                 modifier = Modifier.padding(top = 4.dp, start = 8.dp)
+
             )
             Text(
-                text = "Rp ${product.price}",
+                text = "Rp.${decimalFormating(product.price)},00",
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
+                color = Color.Black,
                 modifier = Modifier.padding(top = 4.dp, start = 8.dp)
             )
             Text(
                 text = product.location,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
+                color = Color.Black,
                 modifier = Modifier.padding(top = 4.dp, start = 8.dp)
             )
             Text(
                 text = "${product.sold} Sold",
                 maxLines = 1,
+                color = Color.Black,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.padding(top = 4.dp, bottom = 8.dp, start = 8.dp)
             )

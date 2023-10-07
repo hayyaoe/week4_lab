@@ -66,7 +66,7 @@ fun Soal4() {
             LazyVerticalGrid(
                 columns = GridCells
                     .Fixed(3),
-                modifier = Modifier.padding(bottom= 80.dp)
+                modifier = Modifier.padding(bottom= 60.dp)
             ) {
                 item(span = { GridItemSpan(3) }) {
                     SearchBar()
