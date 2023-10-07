@@ -481,7 +481,10 @@ fun FollowCard(suggestion: Suggestion) {
 
     var isFollowed by rememberSaveable { mutableStateOf(false) }
     OutlinedCard(
-        modifier = Modifier.padding(8.dp),
+        modifier = Modifier
+            .padding(8.dp)
+            .width(150.dp)
+        ,
         colors = CardDefaults.cardColors(Color.Black)
     ) {
         val resourceId = getResourceId(fileName = suggestion.profilePic)
@@ -512,6 +515,7 @@ fun FollowCard(suggestion: Suggestion) {
                     text = suggestion.username,
                     fontWeight = SemiBold,
                     color = Color.White,
+                    fontSize = 12.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.padding(vertical = 8.dp)
