@@ -4,9 +4,11 @@ import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -57,6 +59,10 @@ import com.example.week4_lab.data.DataSource
 import com.example.week4_lab.model.Feed
 import com.example.week4_lab.model.Story
 import com.example.week4_lab.model.Suggestion
+import java.text.DecimalFormat
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 import kotlin.random.Random
 
 
@@ -147,8 +153,13 @@ fun Header() {
 @Composable
 fun LazyStory(listStory: List<Story>) {
     LazyRow(
-        modifier = Modifier.padding(bottom = 4.dp)
+        modifier = Modifier.padding(bottom = 4.dp),
+        contentPadding = PaddingValues(horizontal = 12.dp)
     ) {
+        item {
+            StoryUser(profile = Story("Your Story", "asa",isLiked =true, isBookmarked = true))
+        }
+
         items(listStory) {
             StoryUser(
                 profile = it
@@ -160,7 +171,8 @@ fun LazyStory(listStory: List<Story>) {
 @Composable
 fun LazySuggest(listSuggestion: List<Suggestion>) {
     LazyRow(
-        modifier = Modifier.padding(vertical = 4.dp)
+        modifier = Modifier.padding(vertical = 4.dp),
+        contentPadding = PaddingValues(horizontal = 12.dp)
     ) {
         items(listSuggestion) {
             FollowCard(
@@ -172,8 +184,6 @@ fun LazySuggest(listSuggestion: List<Suggestion>) {
 
 @Composable
 fun HomeButtons(message: String, drawable: Int) {
-
-
     val context = LocalContext.current
     IconButton(onClick = {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
@@ -346,7 +356,7 @@ fun FeedPost(feed: Feed) {
             0 -> {}
             1 -> {
                 Text(
-                    text = "${feed.likes} Like",
+                    text = "${decimalFormating(feed.likes)} Like",
                     color = Color.White,
                     modifier = Modifier
                         .padding(horizontal = 12.dp)
@@ -356,7 +366,7 @@ fun FeedPost(feed: Feed) {
 
             else -> {
                 Text(
-                    text = "${feed.likes} Likes",
+                    text = "${decimalFormating(feed.likes)} Likes",
                     color = Color.White,
                     modifier = Modifier
                         .padding(horizontal = 12.dp)
@@ -384,7 +394,7 @@ fun FeedPost(feed: Feed) {
         }
 
         Text(
-            text = feed.date,
+            text = dateFormat(feed.date),
             fontSize = 12.sp,
             color = Color.LightGray,
             modifier = Modifier
@@ -412,21 +422,17 @@ fun getResourceId(fileName: String): Int {
     return resourceId
 }
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
-fun StoryUser(profile: Story, modifier: Modifier = Modifier) {
+fun StoryUser(profile: Story) {
 
     val resourceId = getResourceId(fileName = profile.profilePic)
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
+        modifier = Modifier.padding(horizontal = 6.dp)
+            .width(80.dp),
     ) {
         val context = LocalContext.current
-        TextButton(
-            onClick = {
-                Toast.makeText(context, "${profile.username} story", Toast.LENGTH_SHORT).show()
-            },
-        )
-        {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -448,21 +454,24 @@ fun StoryUser(profile: Story, modifier: Modifier = Modifier) {
                         Modifier
                             .clip(shape = CircleShape)
                             .height(70.dp)
-                            .width(70.dp),
+                            .width(70.dp)
+                            .clickable {
+                                Toast.makeText(context, "${profile.username} story", Toast.LENGTH_SHORT).show()
+                            },
                         contentScale = ContentScale.Crop
                     )
                 }
 
-            }
 
         }
 
         Text(
             text = profile.username,
-            fontSize = 12.sp,
+            fontSize = 10.sp,
             color = Color.White,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.padding(top = 4.dp)
         )
     }
 }
@@ -521,7 +530,9 @@ fun FollowCard(suggestion: Suggestion) {
                         ButtonDefaults.buttonColors(containerColor = Color.Magenta)
                     } else {
                         ButtonDefaults.buttonColors(containerColor = Color.LightGray)
-                    }
+                    },
+
+                    modifier = Modifier.width(120.dp)
 
 
                 ) {
@@ -555,6 +566,33 @@ fun TextDifferentFontWeights(username: String, caption: String, maxLine: Int = 2
         color = Color.White,
         overflow = TextOverflow.Ellipsis,
     )
+}
+
+fun decimalFormating(value: Int): String {
+    val decimalFormat = DecimalFormat("#,###")
+    return decimalFormat.format(value)
+}
+
+fun dateFormat(dateString: String): String {
+
+    val months = listOf("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
+
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val date = dateFormat.parse(dateString)
+
+        val calendar = Calendar.getInstance()
+        calendar.time = date
+
+
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+    return if (year == Calendar.getInstance().get(Calendar.YEAR)){
+        "${months[month]} $day"
+    } else{
+        "${months[month]} $day, $year"
+    }
 }
 
 @Preview(showSystemUi = true, showBackground = true)
